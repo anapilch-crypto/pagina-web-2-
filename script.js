@@ -1,133 +1,159 @@
-// Aguarda a página carregar 100% antes de iniciar o xadrez
-window.onload = function() {
-    // Verifica se a biblioteca Chess foi carregada corretamente pela internet
-    if (typeof Chess === 'undefined') {
-        console.error("A biblioteca do xadrez falhou ao carregar. Tentando reconectar...");
-        // Força o carregamento de um link alternativo super seguro caso falhe
-        var script = document.createElement('script');
-        script.src = 'https://jsdelivr.net';
-        script.onload = initGame;
-        document.head.appendChild(script);
-    } else {
-        initGame();
+// Banco de dados interno das receitas
+const listaReceitas = [
+    {
+        id: 1,
+        titulo: "Panqueca Americana Clássica",
+        imagem: "https://unsplash.com",
+        tempo: "15 min",
+        porcoes: "2 pessoas",
+        ingredientes: [
+            "1 xícara de farinha de trigo",
+            "2 colheres de sopa de açúcar",
+            "2 colheres de chá de fermento em pó",
+            "1 pitada de sal",
+            "1 ovo",
+            "1 xícara de leite",
+            "2 colheres de sopa de manteiga derretida"
+        ],
+        preparo: [
+            "Misture os ingredientes secos (farinha, açúcar, fermento e sal) em uma tigela.",
+            "Em outro recipiente, bata levemente o ovo, adicione o leite e a manteiga derretida.",
+            "Junte as duas misturas e mexa até ficar homogêneo (não mexa demais).",
+            "Aqueça uma frigideira antiaderente com um fio de óleo ou manteiga.",
+            "Coloque porções da massa na frigideira. Quando surgirem bolhas na superfície, vire e doure o outro lado.",
+            "Sirva quente com mel, geleia ou frutas!"
+        ]
+    },
+    {
+        id: 2,
+        titulo: "Brigadeiro Gourmet de Panela",
+        imagem: "https://unsplash.com",
+        tempo: "20 min",
+        porcoes: "4 pessoas",
+        ingredientes: [
+            "1 lata de leite condensado",
+            "1 colher de sopa de manteiga",
+            "3 colheres de sopa de chocolate em pó (50% cacau)",
+            "100g de creme de leite (meia caixinha)",
+            "Chocolate granulado para decorar"
+        ],
+        preparo: [
+            "Em uma panela, misture o leite condensado, a manteiga e o chocolate em pó.",
+            "Leve ao fogo baixo e mexa sem parar para não queimar o fundo.",
+            "Quando começar a desgrudar do fundo da panela, adicione o creme de leite.",
+            "Mexa por mais 3 minutos até ganhar consistência cremosa novamente.",
+            "Despeje em um prato fundo e deixe esfriar completamente.",
+            "Coma de colher ou enrole passando no granulado!"
+        ]
+    },
+    {
+        id: 3,
+        titulo: "Omelete Cremosa com Queijo",
+        imagem: "https://unsplash.com",
+        tempo: "10 min",
+        porcoes: "1 pessoa",
+        ingredientes: [
+            "2 ovos inteiros",
+            "2 colheres de sopa de leite",
+            "1/2 xícara de queijo muçarela ralado",
+            "Sal, pimenta e cheiro-verde a gosto",
+            "1 colher de chá de manteiga"
+        ],
+        preparo: [
+            "Bata os ovos com o leite usando um garfo até espumar levemente.",
+            "Tempere com o sal, a pimenta e o cheiro-verde picadinho.",
+            "Derreta a manteiga em uma frigideira em fogo médio.",
+            "Despeje os ovos batidos e mexa o centro devagar com uma espátula.",
+            "Quando a base estiver firme mas o topo ainda úmido, jogue o queijo por cima.",
+            "Dobre a omelete ao meio, espere o queijo derreter e retire da frigideira."
+        ]
     }
-};
+];
 
-var board = null;
-var game = null;
-var $status = null;
+// Elementos da Página
+const gridReceitas = document.getElementById('recipes-grid');
+const campoBusca = document.getElementById('search-input');
+const botaoBusca = document.getElementById('search-button');
+const modal = document.getElementById('recipe-modal');
+const corpoModal = document.getElementById('modal-body');
+const botaoFecharModal = document.getElementById('close-modal');
 
-function initGame() {
-    game = new Chess();
-    $status = $('#status');
-
-    var config = {
-      draggable: true,
-      position: 'start',
-      onDragStart: onDragStart,
-      onDrop: onDrop,
-      onSnapEnd: onSnapEnd,
-      pieceTheme: 'https://chessboardjs.com{piece}.png'
-    };
+// Função para desenhar os cartões de receitas na tela
+function carregarReceitas(receitas) {
+    gridReceitas.innerHTML = ""; // Limpa a tela
     
-    board = Chessboard('board', config);
-    updateStatus();
+    if (receitas.length === 0) {
+        gridReceitas.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #888;'>Nenhuma receita encontrada com esse nome. 📋</p>";
+        return;
+    }
+
+    receitas.forEach(receita => {
+        const cartao = document.createElement('div');
+        cartao.className = 'recipe-card';
+        cartao.onclick = () => abrirJanelaReceita(receita);
+
+        cartao.innerHTML = `
+            <img src="${receita.imagem}" alt="${receita.titulo}" class="recipe-image">
+            <div class="recipe-info">
+                <h3>${receita.titulo}</h3>
+                <div class="recipe-tags">
+                    <span class="tag">⏱️ ${receita.tempo}</span>
+                    <span class="tag">🍽️ ${receita.porcoes}</span>
+                </div>
+            </div>
+        `;
+        gridReceitas.appendChild(cartao);
+    });
 }
 
-function onDragStart (source, piece, position, orientation) {
-  if (game.game_over()) return false;
-  if (piece.search(/^b/) !== -1) return false;
+// Função para abrir o passo a passo completo da receita clicada
+function abrirJanelaReceita(receita) {
+    // Cria as listas de ingredientes e preparo em formato HTML
+    const listaIngredientesHTML = receita.ingredientes.map(ing => `<li>${ing}</li>`).join('');
+    const listaPreparoHTML = receita.preparo.map(passo => `<li>${passo}</li>`).join('');
+
+    corpoModal.innerHTML = `
+        <h2>${receita.titulo}</h2>
+        <img src="${receita.imagem}" alt="${receita.titulo}">
+        
+        <h4>🛒 Ingredientes:</h4>
+        <ul>${listaIngredientesHTML}</ul>
+        
+        <h4>👨‍🍳 Modo de Preparo:</h4>
+        <ol>${listaPreparoHTML}</ol>
+    `;
+    
+    modal.style.display = 'flex'; // Abre o modal na tela
 }
 
-function makeRandomMove () {
-  var possibleMoves = game.moves();
-  if (possibleMoves.length === 0) return;
-
-  var randomIdx = Math.floor(Math.random() * possibleMoves.length);
-  game.move(possibleMoves[randomIdx]);
-  board.position(game.fen());
-  updateStatus();
+// Função para filtrar as receitas pelo que foi digitado na busca
+function filtrarReceitas() {
+    const textoDigitado = campoBusca.value.toLowerCase().trim();
+    
+    const receitasFiltradas = listaReceitas.filter(receita => {
+        return receita.titulo.toLowerCase().includes(textoDigitado);
+    });
+    
+    carregarReceitas(receitasFiltradas);
 }
 
-function onDrop (source, target) {
-  var move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q'
-  });
+// Configurações de Eventos de Cliques e Teclado
+botaoBusca.addEventListener('click', filtrarReceitas);
+campoBusca.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        filtrarReceitas();
+    }
+});
 
-  if (move === null) return 'snapback';
+botaoFecharModal.addEventListener('click', () => {
+    modal.style.display = 'none'; // Fecha o modal ao clicar no X
+});
 
-  updateStatus();
-  window.setTimeout(makeRandomMove, 500);
-}
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none'; // Fecha o modal se clicar fora da caixa branca
+    }
+});
 
-function onSnapEnd () {
-  board.position(game.fen());
-}
-
-function updateStatus () {
-  if (!$status) return;
-  var status = '';
-  var moveColor = 'Brancas';
-  if (game.turn() === 'b') { moveColor = 'Pretas'; }
-
-  if (game.in_checkmate()) {
-    status = 'Fim de jogo! As ' + moveColor + ' sofreram Xeque-Mate.';
-  } else if (game.in_draw()) {
-    status = 'Fim de jogo! Empate.';
-  } else {
-    status = 'Turno das ' + moveColor;
-    if (game.in_check()) { status += ' (Seu Rei está em Xeque!)'; }
-  }
-  $status.html(status);
-}
-
-// Lógica das Regras Interativas (Independe do motor do xadrez)
-function showRule(piece) {
-    const rules = {
-        peao: "<strong>♟️ Peão:</strong> Anda 1 casa para frente (ou 2 no primeiro movimento). Captura na diagonal.",
-        torre: "<strong>♜ Torre:</strong> Movimenta-se em linha reta por quantas casas quiser.",
-        cavalo: "<strong>♞ Cavalo:</strong> Anda em formato de 'L'. É a única peça que pula outras!",
-        bispo: "<strong>♝ Bispo:</strong> Anda apenas nas linhas diagonais por quantas casas quiser.",
-        rainha: "<strong>♛ Rainha:</strong> A mais forte! Anda para qualquer direção por quantas casas quiser.",
-        rei: "<strong>♚ Rei:</strong> Anda apenas 1 casa para qualquer direção. Proteja-o para ganhar!"
-    };
-    $('#rule-display').html(rules[piece]);
-}
-
-// Chat de Suporte
-$('#chat-send').click(function() { sendMessage(); });
-$('#chat-input').keypress(function(e) { if(e.which == 13) { sendMessage(); } });
-
-function sendMessage() {
-    var text = $('#chat-input').val().trim();
-    if (text === '') return;
-
-    $('#chat-messages').append('<div class="message user">' + text + '</div>');
-    $('#chat-input').val('');
-    scrollChat();
-
-    setTimeout(function() {
-        var reply = "Ainda estou aprendendo! 🌸 Digite 'regras', 'jogar' ou 'erro' para receber ajuda.";
-        var lowerText = text.toLowerCase();
-
-        if (lowerText.includes('regra') || lowerText.includes('como mover')) {
-            reply = "📚 Clique nos botões das pecinhas embaixo do tabuleiro para ver as regras de movimento na tela!";
-        } else if (lowerText.includes('jogar') || lowerText.includes('como jogo')) {
-            reply = "🎮 Clique e arraste as peças brancas. O computador jogará automaticamente logo em seguida.";
-        } else if (lowerText.includes('erro') || lowerText.includes('bug')) {
-            reply = "🔧 Se algo travar, recarregue a página no seu navegador.";
-        } else if (lowerText.includes('oi') || lowerText.includes('olá')) {
-            reply = "Olá! 😊 Bem-vindo ao Xadrez Rosa. Como posso ajudar no seu jogo hoje?";
-        }
-
-        $('#chat-messages').append('<div class="message bot">' + reply + '</div>');
-        scrollChat();
-    }, 600);
-}
-
-function scrollChat() {
-    var chat = $('#chat-messages');
-    chat.scrollTop(chat.prop("scrollHeight"));
-}
+// Inicialização automática do site ao abrir
+carregarReceitas(listaReceitas);
