@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xadrez Rosa e Branco</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Links para desenhar o tabuleiro de xadrez na tela -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body>
+
+    <header>
+        <h1>🌸 Xadrez Rosa e Branco 🌸</h1>
+        <p>Jogue online, aprenda as regras e converse com nosso suporte!</p>
+    </header>
+
+    <main class="container">
+        <!-- Lado Esquerdo: Área do Jogo de Xadrez -->
+        <section class="game-area">
+            <div id="board" style="width: 400px; margin: 0 auto;"></div>
+            <div class="status-box">
+                <p><strong>Status:</strong> <span id="status">Seu turno (Brancas)</span></p>
+            </div>
+            
+            <!-- Regras Interativas -->
+            <div class="rules-section">
+                <h3>📜 Regras Interativas Rápidas</h3>
+                <p>Clique em uma peça para ver como ela se move:</p>
+                <div class="rule-buttons">
+                    <button onclick="showRule('peao')">♟️ Peão</button>
+                    <button onclick="showRule('torre')">♜ Torre</button>
+                    <button onclick="showRule('cavalo')">♞ Cavalo</button>
+                    <button onclick="showRule('bispo')">♝ Bispo</button>
+                    <button onclick="showRule('rainha')">♛ Rainha</button>
+                    <button onclick="showRule('rei')">♚ Rei</button>
+                </div>
+                <div id="rule-display" class="rule-display">Escolha uma peça acima para ler a regra.</div>
+            </div>
+        </section>
+
+        <!-- Lado Direito: Chatbot de Suporte -->
+        <section class="chat-area">
+            <div class="chat-header">🤖 Bot de Suporte</div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">Olá! Sou o assistente do Xadrez Rosa. Como posso te ajudar hoje? (Digite 'regras', 'jogar' ou 'erro')</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
+                <button id="chat-send">Enviar</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts do Xadrez e do Chat (Não apague) -->
+    <script src="https://jquery.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script src="script.js"></script>
+</body>
+</html>
