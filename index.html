@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xadrez Rosa e Branco</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Links para desenhar o tabuleiro de xadrez na tela -->
+    
+    <!-- 1. Estilos do Tabuleiro (Carrega primeiro o visual base) -->
     <link rel="stylesheet" href="https://cloudflare.com">
+    
+    <!-- 2. Seu estilo personalizado (Aplica suas cores rosa e branco) -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -18,7 +21,7 @@
     <main class="container">
         <!-- Lado Esquerdo: Área do Jogo de Xadrez -->
         <section class="game-area">
-            <div id="board" style="width: 400px; margin: 0 auto;"></div>
+            <div id="board" style="width: 100%; max-width: 400px; margin: 0 auto;"></div>
             <div class="status-box">
                 <p><strong>Status:</strong> <span id="status">Seu turno (Brancas)</span></p>
             </div>
@@ -52,10 +55,12 @@
         </section>
     </main>
 
-    <!-- Scripts do Xadrez e do Chat (Não apague) -->
+    <!-- 3. Scripts de ferramentas externas (Devem carregar ANTES do seu script.js) -->
     <script src="https://jquery.com"></script>
     <script src="https://cloudflare.com"></script>
     <script src="https://cloudflare.com"></script>
+    
+    <!-- 4. Seu arquivo de lógica (Carrega por último para reconhecer as ferramentas acima) -->
     <script src="script.js"></script>
 </body>
 </html>
