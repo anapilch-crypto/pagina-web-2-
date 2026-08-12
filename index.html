@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xadrez Rosa e Branco</title>
     
-    <!-- 1. Estilos do Tabuleiro (Carrega primeiro o visual base) -->
-    <link rel="stylesheet" href="https://cloudflare.com">
-    
-    <!-- 2. Seu estilo personalizado (Aplica suas cores rosa e branco) -->
+    <!-- Estilos do Tabuleiro e do Site -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,7 +21,7 @@
         <section class="game-area">
             <div id="board" style="width: 100%; max-width: 400px; margin: 0 auto;"></div>
             <div class="status-box">
-                <p><strong>Status:</strong> <span id="status">Seu turno (Brancas)</span></p>
+                <p><strong>Status:</strong> <span id="status">Carregando tabuleiro...</span></p>
             </div>
             
             <!-- Regras Interativas -->
@@ -50,17 +48,138 @@
             </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
-                <button id="chat-send">Enviar</button>
+                <button id="chat-send" onclick="sendMessage()">Enviar</button>
             </div>
         </section>
     </main>
 
-    <!-- 3. Scripts de ferramentas externas (Devem carregar ANTES do seu script.js) -->
+    <!-- CARREGAMENTO SEGURO DAS BIBLIOTECAS (Importante estar nessa ordem exata) -->
     <script src="https://jquery.com"></script>
     <script src="https://cloudflare.com"></script>
-    <script src="https://cloudflare.com"></script>
-    
-    <!-- 4. Seu arquivo de lógica (Carrega por último para reconhecer as ferramentas acima) -->
-    <script src="script.js"></script>
+    <script src="https://jsdelivr.net"></script>
+
+    <!-- CÓDIGO DE LÓGICA INTEGRADO -->
+    <script>
+        var board = null;
+        var game = null;
+
+        // Inicia tudo assim que a página terminar de carregar as bibliotecas acima
+        window.onload = function() {
+            if (typeof Chess === 'undefined' || typeof Chessboard === 'undefined') {
+                document.getElementById('status').innerHTML = "⚠️ Erro ao carregar dependências da internet. Atualize a página.";
+                return;
+            }
+            
+            game = new Chess();
+            
+            var config = {
+                draggable: true,
+                position: 'start',
+                onDragStart: onDragStart,
+                onDrop: onDrop,
+                onSnapEnd: onSnapEnd,
+                pieceTheme: 'https://chessboardjs.com{piece}.png'
+            };
+            
+            board = Chessboard('board', config);
+            updateStatus();
+        };
+
+        function onDragStart (source, piece, position, orientation) {
+            if (game.game_over()) return false;
+            if (piece.search(/^b/) !== -1) return false;
+        }
+
+        function makeRandomMove () {
+            var possibleMoves = game.moves();
+            if (possibleMoves.length === 0) return;
+
+            var randomIdx = Math.floor(Math.random() * possibleMoves.length);
+            game.move(possibleMoves[randomIdx]);
+            board.position(game.fen());
+            updateStatus();
+        }
+
+        function onDrop (source, target) {
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q'
+            });
+
+            if (move === null) return 'snapback';
+
+            updateStatus();
+            window.setTimeout(makeRandomMove, 500);
+        }
+
+        function onSnapEnd () {
+            board.position(game.fen());
+        }
+
+        function updateStatus () {
+            var status = '';
+            var moveColor = 'Brancas';
+            if (game.turn() === 'b') { moveColor = 'Pretas'; }
+
+            if (game.in_checkmate()) {
+                status = 'Fim de jogo! As ' + moveColor + ' sofreram Xeque-Mate.';
+            } else if (game.in_draw()) {
+                status = 'Fim de jogo! Empate.';
+            } else {
+                status = 'Turno das ' + moveColor;
+                if (game.in_check()) { status += ' (Seu Rei está em Xeque!)'; }
+            }
+            $('#status').html(status);
+        }
+
+        // Regras Interativas
+        function showRule(piece) {
+            const rules = {
+                peao: "<strong>♟️ Peão:</strong> Anda 1 casa para frente (ou 2 no primeiro movimento). Captura na diagonal.",
+                torre: "<strong>♜ Torre:</strong> Movimenta-se em linha reta por quantas casas quiser.",
+                cavalo: "<strong>♞ Cavalo:</strong> Anda em formato de 'L'. É a única peça que pula outras!",
+                bispo: "<strong>♝ Bispo:</strong> Anda apenas nas linhas diagonais por quantas casas quiser.",
+                rainha: "<strong>♛ Rainha:</strong> A mais forte! Anda para qualquer direção por quantas casas quiser.",
+                rei: "<strong>♚ Rei:</strong> Anda apenas 1 casa para qualquer direção. Proteja-o para ganhar!"
+            };
+            $('#rule-display').html(rules[piece]);
+        }
+
+        // Chatbot de Suporte
+        function sendMessage() {
+            var text = $('#chat-input').val().trim();
+            if (text === '') return;
+
+            $('#chat-messages').append('<div class="message user">' + text + '</div>');
+            $('#chat-input').val('');
+            
+            var chat = $('#chat-messages');
+            chat.scrollTop(chat.prop("scrollHeight"));
+
+            setTimeout(function() {
+                var reply = "Ainda estou aprendendo! 🌸 Digite 'regras', 'jogar' ou 'erro' para receber ajuda.";
+                var lowerText = text.toLowerCase();
+
+                if (lowerText.includes('regra') || lowerText.includes('como mover')) {
+                    reply = "📚 Clique nos botões das pecinhas embaixo do tabuleiro para ver as regras de movimento na tela!";
+                } else if (lowerText.includes('jogar') || lowerText.includes('como jogo')) {
+                    reply = "🎮 Clique e arraste as peças brancas. O computador jogará automaticamente logo em seguida.";
+                } else if (lowerText.includes('erro') || lowerText.includes('bug')) {
+                    reply = "🔧 Se algo travar, recarregue a página no seu navegador.";
+                } else if (lowerText.includes('oi') || lowerText.includes('olá')) {
+                    reply = "Olá! 😊 Bem-vindo ao Xadrez Rosa. Como posso ajudar no seu jogo hoje?";
+                }
+
+                $('#chat-messages').append('<div class="message bot">' + reply + '</div>');
+                chat.scrollTop(chat.prop("scrollHeight"));
+            }, 600);
+        }
+
+        // Ativa enviar com o botão Enter do teclado
+        $(document).ready(function() {
+            $('#chat-input').keypress(function(e) { if(e.which == 13) { sendMessage(); } });
+        });
+    </script>
 </body>
 </html>
