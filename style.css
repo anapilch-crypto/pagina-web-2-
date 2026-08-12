@@ -1,0 +1,165 @@
+/* Configurações Gerais da Página */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff0f5; /* Fundo Rosa bem clarinho */
+    color: #4a4a4a;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffb6c1; /* Rosa Claro Pastel */
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    max-width: 1000px;
+    margin: 30px auto;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+/* Área do Jogo */
+.game-area {
+    flex: 1.5;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Customização do Tabuleiro em Rosa e Branco */
+.white-1e1d7 {
+    background-color: #ffffff !important; /* Casas Brancas */
+}
+
+.black-3c85d {
+    background-color: #ffb6c1 !important; /* Casas Rosas */
+}
+
+.status-box {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.1em;
+}
+
+/* Regras Interativas */
+.rules-section {
+    margin-top: 25px;
+    border-top: 2px solid #fff0f5;
+    padding-top: 15px;
+}
+
+.rule-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.rule-buttons button {
+    background-color: #ffc0cb;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.rule-buttons button:hover {
+    background-color: #ff69b4; /* Rosa Choque ao passar o mouse */
+}
+
+.rule-display {
+    background-color: #fff0f5;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 5px solid #ff69b4;
+}
+
+/* Caixa do Chatbot */
+.chat-area {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 550px;
+}
+
+.chat-header {
+    background-color: #ff69b4;
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 10px 14px;
+    border-radius: 15px;
+    max-width: 80%;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.message.bot {
+    background-color: #fff0f5;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.message.user {
+    background-color: #ffb6c1;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    background-color: #fff0f5;
+    border-top: 1px solid #ffc0cb;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ffc0cb;
+    border-radius: 20px;
+    outline: none;
+    padding-left: 15px;
+}
+
+.chat-input-area button {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    margin-left: 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
