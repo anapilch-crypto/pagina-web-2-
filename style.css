@@ -1,165 +1,215 @@
-/* Configurações Gerais da Página */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fff0f5; /* Fundo Rosa bem clarinho */
-    color: #4a4a4a;
+/* Configurações Gerais */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+    background-color: #fcf8f5;
+    color: #333;
+}
+
+/* Estilo do Topo */
 header {
-    text-align: center;
-    padding: 20px;
-    background-color: #ffb6c1; /* Rosa Claro Pastel */
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
     color: white;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    margin: 0;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
 }
 
-.container {
+header p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+/* Caixa de Busca */
+.search-box {
     display: flex;
-    max-width: 1000px;
-    margin: 30px auto;
-    gap: 30px;
-    padding: 0 20px;
-}
-
-/* Área do Jogo */
-.game-area {
-    flex: 1.5;
+    max-width: 500px;
+    margin: 0 auto;
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 6px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Customização do Tabuleiro em Rosa e Branco */
-.white-1e1d7 {
-    background-color: #ffffff !important; /* Casas Brancas */
-}
-
-.black-3c85d {
-    background-color: #ffb6c1 !important; /* Casas Rosas */
-}
-
-.status-box {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 1.1em;
-}
-
-/* Regras Interativas */
-.rules-section {
-    margin-top: 25px;
-    border-top: 2px solid #fff0f5;
-    padding-top: 15px;
-}
-
-.rule-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.rule-buttons button {
-    background-color: #ffc0cb;
+.search-box input {
+    flex: 1;
     border: none;
-    padding: 8px 12px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    outline: none;
+    border-radius: 30px;
+}
+
+.search-box button {
+    background-color: #ff7e5f;
     color: white;
-    cursor: pointer;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
     font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
     transition: background 0.2s;
 }
 
-.rule-buttons button:hover {
-    background-color: #ff69b4; /* Rosa Choque ao passar o mouse */
+.search-box button:hover {
+    background-color: #e26343;
 }
 
-.rule-display {
-    background-color: #fff0f5;
-    padding: 12px;
-    border-radius: 8px;
-    border-left: 5px solid #ff69b4;
+/* Grid de Receitas */
+.main-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
-/* Caixa do Chatbot */
-.chat-area {
-    flex: 1;
+.section-title {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #444;
+}
+
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* Cartão de Receita Individual */
+.recipe-card {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: 550px;
-}
-
-.chat-header {
-    background-color: #ff69b4;
-    color: white;
-    padding: 15px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.message {
-    padding: 10px 14px;
     border-radius: 15px;
-    max-width: 80%;
-    font-size: 0.95em;
-    line-height: 1.4;
-}
-
-.message.bot {
-    background-color: #fff0f5;
-    align-self: flex-start;
-    border-bottom-left-radius: 2px;
-}
-
-.message.user {
-    background-color: #ffb6c1;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 2px;
-}
-
-.chat-input-area {
-    display: flex;
-    padding: 10px;
-    background-color: #fff0f5;
-    border-top: 1px solid #ffc0cb;
-}
-
-.chat-input-area input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ffc0cb;
-    border-radius: 20px;
-    outline: none;
-    padding-left: 15px;
-}
-
-.chat-input-area button {
-    background-color: #ff69b4;
-    color: white;
-    border: none;
-    padding: 0 15px;
-    margin-left: 8px;
-    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background-color: #eee;
+}
+
+.recipe-info {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.recipe-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.recipe-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.tag {
+    background-color: #ffebe7;
+    color: #ff7e5f;
+    padding: 4px 10px;
+    font-size: 0.8rem;
     font-weight: bold;
+    border-radius: 12px;
+}
+
+/* Janela Flutuante (Modal) */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.modal-body h2 {
+    margin-bottom: 15px;
+    color: #ff7e5f;
+}
+
+.modal-body img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.modal-body h4 {
+    margin: 15px 0 8px 0;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+.modal-body ul, .modal-body ol {
+    padding-left: 20px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #333;
+    color: #ccc;
+    margin-top: 60px;
+    font-size: 0.9rem;
 }
